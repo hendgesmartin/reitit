@@ -30,7 +30,7 @@ Expanded route data can be retrieved from a router with `routes` and is returned
 
 ```clj
 (r/routes router)
-; [["/ping" {:name ::ping}]
+; [["/ping" {:name :user/ping}]
 ;  ["/pong" {:handler identity]}
 ;  ["/users" {:get {:roles #{:admin}
 ;                   :handler identity}}]]
@@ -75,12 +75,12 @@ Resolved route tree:
 
 ```clj
 (r/routes router)
-; [["/api/ping" {:interceptors [::api]
+; [["/api/ping" {:interceptors [:user/api]
 ;                :name :user/ping}]
-;  ["/api/admin/users" {:interceptors [::api]
+;  ["/api/admin/users" {:interceptors [:user/api]
 ;                       :roles #{:admin}
-;                       :name ::users}]
-;  ["/api/admin/db" {:interceptors [::api ::db]
+;                       :name :user/users}]
+;  ["/api/admin/db" {:interceptors [:user/api :user/db]
 ;                    :roles #{:db-admin}}]]
 ```
 
@@ -119,10 +119,10 @@ Accumulated route data:
      ["/api/pong" ::pong]]))
      
 (r/routes router)
-; [["/swagger.json" {:no-doc true, :name ::swagger}]
-;  ["/api-docs" {:no-doc true, :name ::api-docs}]
-;  ["/api/ping" {:name ::ping}]
-;  ["/api/pong" {:name ::pong}]]
+; [["/swagger.json" {:no-doc true, :name :user/swagger}]
+;  ["/api-docs" {:no-doc true, :name :user/api-docs}]
+;  ["/api/ping" {:name :user/ping}]
+;  ["/api/pong" {:name :user/pong}]]
 ```
 
 ## Top-level Route Data
@@ -137,13 +137,10 @@ Route data can be introduced also via `Router` option `:data`:
      ["/ping" ::ping]
      ["/pong" ::pong]]
     {:data {:middleware [::session]}}))
-```
 
-Expanded routes:
-
-```clj
-[["/api/ping" {:middleware [::session ::api], :name ::ping}]
- ["/api/pong" {:middleware [::session ::api], :name ::pong}]]
+(r/routes router)
+; [["/api/ping" {:middleware [:user/session :user/api], :name :user/ping}]
+; ["/api/pong" {:middleware [:user/session :user/api], :name :user/pong}]]
 ```
 
 
